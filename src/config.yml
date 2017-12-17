@@ -1,0 +1,79 @@
+#https://www.spigotmc.org/resources/%E2%96%B6-autosell-%E2%97%80-create-chests-that-automatically-sell-quick-sell-gui.28812/
+use-essentials-worth-yml: false
+sell-timer: 30
+prices:
+  dirt: 1.0
+  ironingot: 1.0
+sellchest-enabled: true
+sellcommand-enabled: true
+sellchest-mode: 'AUTOSELL'
+sellchest-protection: true
+sign-price: 0
+price-multiplier: 1.0
+show-sell-notification-if-zero: false
+show-detailed-overview: true
+limit: false
+limit-max: 100
+booster-max: 1000
+sign-layout:
+  trigger: '[autosell]'
+  autosell:
+   - '&9[AutoSell]'
+   - '&2Selling in:'
+   - '&2<seconds>s'
+   - '&2<username>'
+  rightclicksell:
+    ready:
+     - '&9[AutoSell]'
+     - '&2Right-Click'
+     - '&2to sell.'
+     - '&2<username>'
+    cooldown:
+     - '&9[AutoSell]'
+     - '&2Cooldown:'
+     - '&2<seconds>s'
+     - '&2<username>'
+  sellchestdiable:
+    - '&4[AutoSell]'
+    - '&cSell-chests'
+    - '&care'
+    - '&cdisabled'
+  notachest:
+    - '&4[AutoSell]'
+    - '&cThis sign is'
+    - '&cnot connected'
+    - '&cto a chest'
+  nopermission:
+    - '&4[AutoSell]'
+    - '&cYou have'
+    - '&cinsufficient'
+    - '&cpermissions'
+  limitreached:
+    - '&4[AutoSell]'
+    - '&cYou may only'
+    - '&ccreate <limit>'
+    - '&cchests'
+  ecofail:
+    - '&4[AutoSell]'
+    - '&cEconomy'
+    - '&ctransaction'
+    - '&cfailed'
+  toopoor:
+    - '&4[AutoSell]'
+    - '&cInsufficient'
+    - '&cbalance'
+    - ''
+messages:
+  chest-create: '&aSuccessfully created a new AutoSell chest!'
+  chest-destroy: '&aSuccessfully removed an AutoSell chest.'
+  chest-purchase: '&a$%money% has been transacted to create an AutoSell chest.'
+  autosell-notifications-on: '&aYou have now subscribed to AutoSell notifications. &7Notifications will be sent to you after your chests have sold.'
+  autosell-notifications-off: '&aYou are no longer subscribed to AutoSell notifications.'
+  autosell-sale:
+    header: '&2&lAutoSell sale &a&l($%money%)&2&l:'
+    detail:
+      own-chests: ' &8* &a$%money% from chests you own.'
+      own-chests-shared: ' &8* &a$%money% from chests you own ($%totalmoney% split across %members% members).'
+      shared-chests: ' &8* &a$%money% from chests you''re a member of.'
+      booster: ' &8* &a%booster%% booster increase.'
+      price-multiplier: ' &8* &a%booster%x global price multiplier.'

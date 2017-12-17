@@ -1,0 +1,14 @@
+name: AutoSell
+version: 1.0
+main: me.fatpigsarefat.autosell.AutoSell
+author: fatpigsarefat
+
+commands:
+  autosell:
+    description: AutoSell
+    usage: /autosell
+    permission: autosell.command
+
+permissions:
+  autosell.command:
+    description: Autosell command
