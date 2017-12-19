@@ -12,3 +12,5 @@ commands:
 permissions:
   autosell.command:
     description: Autosell command
+  autosell.create:
+    description: Permission to create autosell chest
