@@ -12,7 +12,6 @@ public enum Messages {
     AUTOSELL_NOTIFICATIONS_OFF(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-notifications-off"))),
     AUTOSELL_SALE_HEADER(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.header"))),
     AUTOSELL_DETAIL_OWN_CHESTS(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.detail.own-chests"))),
-    AUTOSELL_DETAIL_OWN_CHESTS_SHARED(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.detail.own-chests-shared"))),
     AUTOSELL_DETAIL_SHARED_CHESTS(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.detail.shared-chests"))),
     AUTOSELL_DETAIL_BOOSTER(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.detail.booster"))),
     AUTOSELL_DETAIL_PRICE_MULTIPLIER(ChatColor.translateAlternateColorCodes('&', AutoSell.getInstance().getConfig().getString("messages.autosell-sale.detail.price-multiplier")));

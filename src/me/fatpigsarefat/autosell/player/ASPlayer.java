@@ -3,8 +3,12 @@ package me.fatpigsarefat.autosell.player;
 import me.fatpigsarefat.autosell.AutoSell;
 import me.fatpigsarefat.autosell.chests.SellChest;
 import me.fatpigsarefat.autosell.utils.Config;
+import org.bukkit.Bukkit;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.yaml.snakeyaml.Yaml;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +19,15 @@ public class ASPlayer {
 
     public ASPlayer(Player player) {
         this.player = player;
+        loadData();
+    }
+
+    public void loadData() {
+        File data = new File(AutoSell.getInstance().getDataFolder() + File.separator + "data" + File.separator + player.getUniqueId().toString() + ".yml");
+        if (data.exists()) {
+            YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(data);
+            subscribedToNotifications = yamlConfiguration.getBoolean("notifications", false);
+        }
     }
 
     public Player getPlayer() {
@@ -50,7 +63,7 @@ public class ASPlayer {
         return sellChests;
     }
 
-    public int booster() {
+    public int getBooster() {
         int booster = 0;
         for (int i = 0; i < Config.boosterMax; i++) {
             if (player.hasPermission("autosell.booster." + i)) {

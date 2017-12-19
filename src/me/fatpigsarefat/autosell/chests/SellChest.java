@@ -2,6 +2,8 @@ package me.fatpigsarefat.autosell.chests;
 
 import me.fatpigsarefat.autosell.AutoSell;
 import me.fatpigsarefat.autosell.events.bukkitevents.AutoSellChestSellEvent;
+import me.fatpigsarefat.autosell.notifications.Notification;
+import me.fatpigsarefat.autosell.notifications.NotificationType;
 import me.fatpigsarefat.autosell.player.ASPlayer;
 import me.fatpigsarefat.autosell.utils.Config;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -151,15 +153,6 @@ public class SellChest {
         if (getChestLocation().getBlock().getType() == Material.CHEST || getChestLocation().getBlock().getType() == Material.TRAPPED_CHEST) {
             Chest chest = (Chest) getChestLocation().getBlock().getState();
             double totalSale = 0.0;
-            double booster = 0;
-            if (op.isOnline()) {
-                ASPlayer asPlayer = AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(op.getUniqueId()));
-                booster = asPlayer.booster();
-            }
-            double percentage = 1;
-            if (booster > 0) {
-                percentage = percentage + (booster / 100D);
-            }
             int slot = 0;
             NumberFormat numf = NumberFormat.getInstance();
             numf.setGroupingUsed(true);
@@ -212,15 +205,24 @@ public class SellChest {
                 uuids.addAll(getMembers());
                 double splitAmounts = autoSellChestSellEvent.getSellAmount() / uuids.size();
                 for (UUID uuid : uuids) {
+                    double boostedAmount = splitAmounts;
                     OfflinePlayer sellPlayer = Bukkit.getOfflinePlayer(uuid);
-                    EconomyResponse er = AutoSell.getEconomy().depositPlayer(sellPlayer, splitAmounts);
+                    double multiplyAmount = 1;
+                    if (sellPlayer.isOnline()) {
+                        multiplyAmount = multiplyAmount + (AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId())).getBooster() / 100D);
+                    }
+                    boostedAmount = boostedAmount * multiplyAmount;
+                    EconomyResponse er = AutoSell.getEconomy().depositPlayer(sellPlayer, boostedAmount);
                     if (er.transactionSuccess()) {
                         if (sellPlayer.isOnline()) {
-                            Player player = (Player) sellPlayer;
-                            ASPlayer asPlayer = AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId()));
-                            if (asPlayer.isSubscribedToNotifications()) {
-                                player.sendMessage("Sold: $" + autoSellChestSellEvent.getSellAmount());
+                            NotificationType notificationType;
+                            if (getOwner().equals(uuid)) {
+                                notificationType = NotificationType.OWNED_CHEST;
+                            } else {
+                                notificationType = NotificationType.SHARED_CHEST;
                             }
+                            Notification notification = new Notification(boostedAmount, notificationType);
+                            AutoSell.getNotificationDispatcher().addPendingNotificaion(uuid, notification);
                         }
                     }
                 }

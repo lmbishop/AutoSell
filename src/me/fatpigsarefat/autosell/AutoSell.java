@@ -7,6 +7,7 @@ import me.fatpigsarefat.autosell.commands.AutosellCommand;
 import me.fatpigsarefat.autosell.events.BreakEvent;
 import me.fatpigsarefat.autosell.events.InteractEvent;
 import me.fatpigsarefat.autosell.events.SignCreateEvent;
+import me.fatpigsarefat.autosell.notifications.NotificationDispatcher;
 import me.fatpigsarefat.autosell.player.JoinEvent;
 import me.fatpigsarefat.autosell.player.PlayerManager;
 import me.fatpigsarefat.autosell.utils.Config;
@@ -28,6 +29,7 @@ public class AutoSell extends JavaPlugin {
     private static AutoSell instance;
     private static SellChestManager sellChestManager;
     private static PlayerManager playerManager;
+    private static NotificationDispatcher notificationDispatcher;
     private static Economy economy = null;
     private static HashMap<String, Double> prices;
 
@@ -47,6 +49,7 @@ public class AutoSell extends JavaPlugin {
         prices = new HashMap<>();
         sellChestManager = new SellChestManager();
         playerManager = new PlayerManager();
+        notificationDispatcher = new NotificationDispatcher();
         new SellSignFormat();
         dataGenerator();
         setupEconomy();
@@ -102,6 +105,7 @@ public class AutoSell extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InteractEvent(), this);
         sellChestManager.runCooldown();
         sellChestManager.runAutosave();
+        notificationDispatcher.startAutomaticNotifier();
     }
 
     @Override
@@ -127,6 +131,10 @@ public class AutoSell extends JavaPlugin {
 
     public static PlayerManager getPlayerManager() {
         return playerManager;
+    }
+
+    public static NotificationDispatcher getNotificationDispatcher() {
+        return notificationDispatcher;
     }
 
     private void dataGenerator() {

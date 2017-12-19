@@ -1,6 +1,6 @@
 #https://www.spigotmc.org/resources/%E2%96%B6-autosell-%E2%97%80-create-chests-that-automatically-sell-quick-sell-gui.28812/
 use-essentials-worth-yml: false
-sell-timer: 30
+sell-timer: 90
 prices:
   dirt: 1.0
   ironingot: 1.0
@@ -73,7 +73,6 @@ messages:
     header: '&2&lAutoSell sale &a&l($%money%)&2&l:'
     detail:
       own-chests: ' &8* &a$%money% from chests you own.'
-      own-chests-shared: ' &8* &a$%money% from chests you own ($%totalmoney% split across %members% members).'
       shared-chests: ' &8* &a$%money% from chests you''re a member of.'
       booster: ' &8* &a%booster%% booster increase.'
       price-multiplier: ' &8* &a%booster%x global price multiplier.'

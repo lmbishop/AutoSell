@@ -2,6 +2,7 @@ package me.fatpigsarefat.autosell.chests;
 
 import me.fatpigsarefat.autosell.AutoSell;
 import me.fatpigsarefat.autosell.utils.Config;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -117,6 +118,10 @@ public class SellChestManager {
         for (Map.Entry<UUID, YamlConfiguration> entry : loadedConfigs.entrySet()) {
             UUID uuid = entry.getKey();
             YamlConfiguration value = entry.getValue();
+
+            if (Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(uuid).isOnline()) {
+                value.set("notifications", AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(uuid)).isSubscribedToNotifications());
+            }
 
             try {
                 value.save(loadedFiles.get(uuid));

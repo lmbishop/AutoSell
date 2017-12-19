@@ -31,6 +31,15 @@ public class AutosellCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.GREEN + "/autosell addmember <id|all> <player>");
                 sender.sendMessage(ChatColor.GREEN + "/autosell removemember <id|all> <player>");
                 sender.sendMessage(ChatColor.GREEN + "/autosell migratedata");
+            } else if (args[0].equalsIgnoreCase("booster")) {
+                sender.sendMessage(String.valueOf(asPlayer.getBooster()));
+            } else if (args[0].equalsIgnoreCase("notify")) {
+                asPlayer.setSubscribedToNotifications(!asPlayer.isSubscribedToNotifications());
+                if (asPlayer.isSubscribedToNotifications()) {
+                    sender.sendMessage(Messages.AUTOSELL_NOTIFICATIONS_ON.getMessage());
+                } else {
+                    sender.sendMessage(Messages.AUTOSELL_NOTIFICATIONS_OFF.getMessage());
+                }
             } else if (args[0].equalsIgnoreCase("migratedata")) {
                 File f = new File(AutoSell.getInstance().getDataFolder() + File.separator + "data.yml");
                 if (f.exists()) {
