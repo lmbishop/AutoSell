@@ -14,3 +14,5 @@ permissions:
     description: Autosell command
   autosell.create:
     description: Permission to create autosell chest
+  autosell.admin:
+    description: Bypass autosell restrictions

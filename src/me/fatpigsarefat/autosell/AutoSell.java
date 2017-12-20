@@ -13,8 +13,10 @@ import me.fatpigsarefat.autosell.player.PlayerManager;
 import me.fatpigsarefat.autosell.utils.Config;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -106,6 +108,16 @@ public class AutoSell extends JavaPlugin {
         sellChestManager.runCooldown();
         sellChestManager.runAutosave();
         notificationDispatcher.startAutomaticNotifier();
+
+        File file = new File(this.getDataFolder() + File.separator + "data.yml");
+        if (file.exists()) {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (player.hasPermission("autosell.admin")) {
+                    player.sendMessage(ChatColor.RED + "Old AutoSell data detected - /autosell migratedata to migrate that data.");
+                    player.sendMessage(ChatColor.RED + "WARNING - do not resend the command if you previously have done it, instead delete the old data file.");
+                }
+            }
+        }
     }
 
     @Override

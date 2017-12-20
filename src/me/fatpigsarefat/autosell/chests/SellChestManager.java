@@ -119,7 +119,7 @@ public class SellChestManager {
             UUID uuid = entry.getKey();
             YamlConfiguration value = entry.getValue();
 
-            if (Bukkit.getPlayer(uuid) == null || Bukkit.getPlayer(uuid).isOnline()) {
+            if (Bukkit.getPlayer(uuid) != null && Bukkit.getPlayer(uuid).isOnline()) {
                 value.set("notifications", AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(uuid)).isSubscribedToNotifications());
             }
 

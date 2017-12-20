@@ -24,7 +24,7 @@ public class ASPlayer {
         File data = new File(AutoSell.getInstance().getDataFolder() + File.separator + "data" + File.separator + player.getUniqueId().toString() + ".yml");
         if (data.exists()) {
             YamlConfiguration yamlConfiguration = YamlConfiguration.loadConfiguration(data);
-            subscribedToNotifications = yamlConfiguration.getBoolean("notifications", false);
+            subscribedToNotifications = yamlConfiguration.getBoolean("notifications", true);
         }
     }
 

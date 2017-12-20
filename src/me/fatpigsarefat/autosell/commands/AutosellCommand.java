@@ -38,7 +38,7 @@ public class AutosellCommand implements CommandExecutor {
                 } else {
                     sender.sendMessage(Messages.AUTOSELL_NOTIFICATIONS_OFF.getMessage());
                 }
-            } else if (args[0].equalsIgnoreCase("migratedata")) {
+            } else if (args[0].equalsIgnoreCase("migratedata") && sender.hasPermission("autosell.admin")) {
                 File f = new File(AutoSell.getInstance().getDataFolder() + File.separator + "data.yml");
                 if (f.exists()) {
                     YamlConfiguration yaml = YamlConfiguration.loadConfiguration(f);
@@ -62,7 +62,7 @@ public class AutosellCommand implements CommandExecutor {
                     }
                     sender.sendMessage(ChatColor.GREEN + "Successfully loaded " + migrated + " chests from old data files. These chests will be saved using " +
                             "the new " +
-                            "system when the server is shut down safely.");
+                            "system when the server is shut down safely. It is now safe to delete the old file.");
                 } else {
                     sender.sendMessage(ChatColor.RED + "There is no data to migrate.");
                 }
