@@ -221,8 +221,13 @@ public class SellChest {
                             } else {
                                 notificationType = NotificationType.SHARED_CHEST;
                             }
-                            Notification notification = new Notification(boostedAmount, notificationType);
-                            AutoSell.getNotificationDispatcher().addPendingNotificaion(uuid, notification);
+                            if (Config.sellchestMode.equalsIgnoreCase("AUTOSELL")) {
+                                Notification notification = new Notification(boostedAmount, notificationType);
+                                AutoSell.getNotificationDispatcher().addPendingNotificaion(uuid, notification);
+                            } else if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
+                                Notification notification = new Notification(boostedAmount, notificationType);
+                                AutoSell.getNotificationDispatcher().dispatchNotifications(uuid, notification);
+                            }
                         }
                     }
                 }

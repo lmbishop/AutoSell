@@ -17,6 +17,7 @@ public class Config {
     public static int signPrice;
     public static double priceMultiplier;
     public static boolean showSellNotificationIfZero;
+    public static boolean showDetailedOverview;
     public static boolean limit;
     public static int limitMax;
     public static int boosterMax;
@@ -31,6 +32,7 @@ public class Config {
         signPrice = AutoSell.getInstance().getConfig().getInt("sign-price");
         priceMultiplier = AutoSell.getInstance().getConfig().getDouble("price-multiplier");
         showSellNotificationIfZero = AutoSell.getInstance().getConfig().getBoolean("show-sell-notification-if-zero");
+        showDetailedOverview = AutoSell.getInstance().getConfig().getBoolean("show-detailed-overview");
         limit = AutoSell.getInstance().getConfig().getBoolean("limit");
         limitMax = AutoSell.getInstance().getConfig().getInt("limit-max");
         boosterMax = AutoSell.getInstance().getConfig().getInt("booster-max");
