@@ -3,10 +3,8 @@ package me.fatpigsarefat.autosell.player;
 import me.fatpigsarefat.autosell.AutoSell;
 import me.fatpigsarefat.autosell.chests.SellChest;
 import me.fatpigsarefat.autosell.utils.Config;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.yaml.snakeyaml.Yaml;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -4,7 +4,6 @@ import me.fatpigsarefat.autosell.AutoSell;
 import me.fatpigsarefat.autosell.events.bukkitevents.AutoSellChestSellEvent;
 import me.fatpigsarefat.autosell.notifications.Notification;
 import me.fatpigsarefat.autosell.notifications.NotificationType;
-import me.fatpigsarefat.autosell.player.ASPlayer;
 import me.fatpigsarefat.autosell.utils.Config;
 import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.*;
