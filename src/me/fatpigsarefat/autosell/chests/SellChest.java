@@ -232,7 +232,7 @@ public class SellChest {
                 }
             }
         } else {
-            System.out.println("[AutoSell] Transaction has failed for Chest Sale");
+            // System.out.println("[AutoSell] Transaction has failed for Chest Sale");
         }
     }
 }
