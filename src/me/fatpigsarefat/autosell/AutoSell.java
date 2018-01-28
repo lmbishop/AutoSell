@@ -55,14 +55,7 @@ public class AutoSell extends JavaPlugin {
         new SellSignFormat();
         dataGenerator();
         setupEconomy();
-        File essentials = new File("plugins" +  File.separator + "Essentials"  + File.separator +  "worth.yml");
-        File config = new File(this.getDataFolder() + File.separator + "config.yml");
-        Config c = new Config();
-        if (Config.essentialsWorth) {
-            c.parseConfigFile(essentials, "worth");
-        } else {
-            c.parseConfigFile(config, "prices");
-        }
+        loadConfig();
 
         File dataDir = new File(this.getDataFolder() + File.separator + "data");
         if (dataDir.isDirectory()) {
@@ -118,6 +111,20 @@ public class AutoSell extends JavaPlugin {
                 }
             }
         }
+    }
+
+    public void loadConfig() {
+        reloadConfig();
+        prices.clear();
+        File essentials = new File("plugins" +  File.separator + "Essentials"  + File.separator +  "worth.yml");
+        File config = new File(this.getDataFolder() + File.separator + "config.yml");
+        Config c = new Config();
+        if (Config.essentialsWorth) {
+            c.parseConfigFile(essentials, "worth");
+        } else {
+            c.parseConfigFile(config, "prices");
+        }
+        c.load();
     }
 
     @Override
