@@ -14,6 +14,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,6 +32,8 @@ public class AutosellCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.GREEN + "/autosell addmember <id|all> <player>");
                 sender.sendMessage(ChatColor.GREEN + "/autosell removemember <id|all> <player>");
                 sender.sendMessage(ChatColor.GREEN + "/autosell migratedata");
+                sender.sendMessage(ChatColor.GREEN + "/autosell reload");
+                sender.sendMessage(ChatColor.GREEN + "/autosell itemname");
             } else if (args[0].equalsIgnoreCase("notify")) {
                 asPlayer.setSubscribedToNotifications(!asPlayer.isSubscribedToNotifications());
                 if (asPlayer.isSubscribedToNotifications()) {
@@ -66,13 +69,6 @@ public class AutosellCommand implements CommandExecutor {
                 } else {
                     sender.sendMessage(ChatColor.RED + "There is no data to migrate.");
                 }
-            } else if (args[0].equalsIgnoreCase("notify")) {
-                if (asPlayer.isSubscribedToNotifications()) {
-                    sender.sendMessage(Messages.AUTOSELL_NOTIFICATIONS_OFF.getMessage());
-                } else {
-                    sender.sendMessage(Messages.AUTOSELL_NOTIFICATIONS_ON.getMessage());
-                }
-                asPlayer.setSubscribedToNotifications(!asPlayer.isSubscribedToNotifications());
             } else if (args[0].equalsIgnoreCase("addmember")) {
                 if (args.length >= 3) {
                     if (StringUtils.isNumeric(args[1])) {
@@ -169,6 +165,30 @@ public class AutosellCommand implements CommandExecutor {
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "You have no chests which you own or are a member of.");
+                }
+            } else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("autosell.admin")) {
+                AutoSell.getInstance().loadConfig();
+                sender.sendMessage(ChatColor.GREEN + "Your configuration has been reloaded.");
+            } else if (args[0].equalsIgnoreCase("itemname") && sender.hasPermission("autosell.admin")) {
+                if (asPlayer.getPlayer().getItemInHand() != null) {
+                    ItemStack is = asPlayer.getPlayer().getItemInHand();
+                    String name = is.getType().toString().toLowerCase().replace("_", "");
+                    String durability = "";
+                    if (is.getDurability() != 0) {
+                        durability = String.valueOf(is.getDurability());
+                    }
+                    sender.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "The name of this item is " + ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + name);
+                    sender.sendMessage("");
+                    sender.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "To add this to your config, add the following: ");
+                    sender.sendMessage(ChatColor.GREEN + "'" + name + "': <price>");
+                    if (!durability.equals("")) {
+                        sender.sendMessage("");
+                        sender.sendMessage(ChatColor.GREEN.toString() + ChatColor.BOLD + "To include data codes/durability: ");
+                        sender.sendMessage(ChatColor.GREEN + "'" + name + "':");
+                        sender.sendMessage(ChatColor.GREEN + "  '" + durability + "': <price>");
+                    }
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Please hold an item.");
                 }
             }
         }
