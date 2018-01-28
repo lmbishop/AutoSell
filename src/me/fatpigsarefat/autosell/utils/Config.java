@@ -23,6 +23,10 @@ public class Config {
     public static int boosterMax;
 
     public Config() {
+        load();
+    }
+
+    public void load() {
         essentialsWorth = AutoSell.getInstance().getConfig().getBoolean("use-essentials-worth-yml");
         sellTimer = AutoSell.getInstance().getConfig().getInt("sell-timer");
         sellchestEnabled = AutoSell.getInstance().getConfig().getBoolean("sellchest-enabled");
@@ -51,18 +55,18 @@ public class Config {
                         Integer.parseInt(itemReformat);
                         isItemId = true;
                     } catch (NumberFormatException ignored) {
-
+                        isItemId = false;
                     }
                     if (isItemId) {
                         try {
                             itemReformat = Material.getMaterial(Integer.parseInt(itemReformat)).toString();
                         } catch (NullPointerException ignored) {
-
+                            continue;
                         }
                     }
                     itemReformat = itemReformat.replace("_", "").toLowerCase();
 
-                    System.out.println("[AutoSell] Item " + itemReformat + " registered for $" + price);
+                    System.out.println("[AutoSell] Item " + itemReformat + ":" + itemdata + " registered for $" + price);
                     AutoSell.getPrices().put(itemReformat + ":" + itemdata, price);
                 }
             } else {
@@ -74,13 +78,13 @@ public class Config {
                     Integer.parseInt(itemReformat);
                     isItemId = true;
                 } catch (NumberFormatException ignored) {
-
+                    isItemId = false;
                 }
                 if (isItemId) {
                     try {
                         itemReformat = Material.getMaterial(Integer.parseInt(itemReformat)).toString();
                     } catch (NullPointerException ignored) {
-
+                        continue;
                     }
                 }
                 itemReformat = itemReformat.replace("_", "").toLowerCase();
