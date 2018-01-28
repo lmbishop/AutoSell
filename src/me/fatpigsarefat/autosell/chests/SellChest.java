@@ -172,6 +172,7 @@ public class SellChest {
                 } else if (AutoSell.getPrices().containsKey(type + ":" + dataCode)) {
                     key = type + ":" + dataCode;
                 } else {
+                    slot++;
                     continue;
                 }
 
