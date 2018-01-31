@@ -33,6 +33,11 @@ sign-layout:
      - '&2Cooldown:'
      - '&2<seconds>s'
      - '&2<username>'
+  selling:
+    - '&9[AutoSell]'
+    - '&2Selling...'
+    - ''
+    - '&2<username>'
   sellchestdiable:
     - '&4[AutoSell]'
     - '&cSell-chests'

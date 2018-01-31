@@ -52,29 +52,34 @@ public class SellChest {
     }
 
     public void updateSign() {
+        List<String> lines;
+
+        if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
+            if (cooldown <= 0) {
+                lines = SellSignFormat.getTriggersellStandby();
+            } else {
+                lines = SellSignFormat.getTriggersellCooldown();
+            }
+        } else {
+            lines = SellSignFormat.getAutosellCooldown();
+        }
+
+        updateSign(lines);
+    }
+
+    public void updateSign(List<String> sellSignFormat) {
         if (!getSignLocation().getChunk().isLoaded()) {
             return;
         }
-        if (getSignLocation().getBlock().getType() == Material.SIGN_POST || getSignLocation().getBlock().getType() == Material.WALL_SIGN || getSignLocation().getBlock()
-                .getType() == Material.SIGN) {
+        if (getSignLocation().getBlock().getType() == Material.SIGN_POST || getSignLocation().getBlock().getType() == Material.WALL_SIGN || getSignLocation()
+                .getBlock().getType() == Material.SIGN) {
             Sign sign = (Sign) getSignLocation().getBlock().getState();
-            List<String> lines;
-
-            if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
-                if (cooldown <= 0) {
-                    lines = SellSignFormat.getTriggersellStandby();
-                } else {
-                    lines = SellSignFormat.getTriggersellCooldown();
-                }
-            } else {
-                lines = SellSignFormat.getAutosellCooldown();
-            }
 
             Map<String, String> placeholders = new HashMap<>();
             placeholders.put("<username>", Bukkit.getOfflinePlayer(getOwner()).getName());
             placeholders.put("<seconds>", String.valueOf(getCooldown()));
             List<String> coloredLines = new ArrayList<>();
-            for (String s : lines) {
+            for (String s : sellSignFormat) {
                 for (Map.Entry<String, String> entry : placeholders.entrySet()) {
                     String placeholder = entry.getKey();
                     String value = entry.getValue();
@@ -109,7 +114,8 @@ public class SellChest {
 
     public boolean addMember(Player player) {
         if (addMember(player.getUniqueId())) {
-            //player.sendMessage(ChatColor.GREEN + "You are now a member of " + getOwnersName() + " sell chest at " + getChestLocation().getBlockX() + ", " + getChestLocation().getBlockY() + ", " + getChestLocation().getBlockZ());
+            //player.sendMessage(ChatColor.GREEN + "You are now a member of " + getOwnersName() + " sell chest at " + getChestLocation().getBlockX() + ", " +
+            // getChestLocation().getBlockY() + ", " + getChestLocation().getBlockZ());
             return true;
         }
         return false;
@@ -125,7 +131,8 @@ public class SellChest {
 
     public boolean removeMember(Player player) {
         if (removeMember(player.getUniqueId())) {
-            //player.sendMessage(ChatColor.GREEN + "You are no longer a member of " + getOwnersName() + " sell chest at " + getChestLocation().getBlockX() + ", " + getChestLocation().getBlockY() + ", " + getChestLocation().getBlockZ());
+            //player.sendMessage(ChatColor.GREEN + "You are no longer a member of " + getOwnersName() + " sell chest at " + getChestLocation().getBlockX() +
+            // ", " + getChestLocation().getBlockY() + ", " + getChestLocation().getBlockZ());
             return true;
         }
         return false;
@@ -148,6 +155,7 @@ public class SellChest {
             return;
         }
 
+        updateSign(SellSignFormat.getSelling());
         OfflinePlayer op = Bukkit.getOfflinePlayer(getOwner());
         if (getChestLocation().getBlock().getType() == Material.CHEST || getChestLocation().getBlock().getType() == Material.TRAPPED_CHEST) {
             Chest chest = (Chest) getChestLocation().getBlock().getState();
@@ -209,7 +217,8 @@ public class SellChest {
                     OfflinePlayer sellPlayer = Bukkit.getOfflinePlayer(uuid);
                     double multiplyAmount = 1;
                     if (sellPlayer.isOnline()) {
-                        multiplyAmount = multiplyAmount + (AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId())).getBooster() / 100D);
+                        multiplyAmount = multiplyAmount + (AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId())).getBooster() /
+                                100D);
                     }
                     boostedAmount = boostedAmount * multiplyAmount;
                     EconomyResponse er = AutoSell.getEconomy().depositPlayer(sellPlayer, boostedAmount);

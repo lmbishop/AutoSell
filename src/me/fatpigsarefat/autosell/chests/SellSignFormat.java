@@ -10,6 +10,7 @@ public class SellSignFormat {
     private static List<String> autosellCooldown;
     private static List<String> triggersellStandby;
     private static List<String> triggersellCooldown;
+    private static List<String> selling;
     private static List<String> sellchestDisable;
     private static List<String> noPermission;
     private static List<String> notAChest;
@@ -22,6 +23,7 @@ public class SellSignFormat {
         autosellCooldown = AutoSell.getInstance().getConfig().getStringList("sign-layout.autosell");
         triggersellStandby = AutoSell.getInstance().getConfig().getStringList("sign-layout.rightclicksell.ready");
         triggersellCooldown = AutoSell.getInstance().getConfig().getStringList("sign-layout.rightclicksell.cooldown");
+        selling = AutoSell.getInstance().getConfig().getStringList("sign-layout.selling");
         sellchestDisable = AutoSell.getInstance().getConfig().getStringList("sign-layout.sellchestdisable");
         noPermission = AutoSell.getInstance().getConfig().getStringList("sign-layout.nopermission");
         notAChest = AutoSell.getInstance().getConfig().getStringList("sign-layout.notachest");
@@ -40,6 +42,10 @@ public class SellSignFormat {
 
     public static List<String> getTriggersellCooldown() {
         return triggersellCooldown;
+    }
+
+    public static List<String> getSelling() {
+        return selling;
     }
 
     public static String getSignTrigger() {
