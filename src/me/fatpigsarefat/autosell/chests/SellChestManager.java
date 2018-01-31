@@ -37,7 +37,9 @@ public class SellChestManager {
                 public void run() {
                     if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
                         for (SellChest chest : sellChests) {
-                            if (chest != null && chest.getChestLocation() != null && chest.getChestLocation().getChunk().isLoaded()) {
+                            if (chest != null && chest.getChestLocation() != null &&
+                                    chest.getChestLocation().getChunk() != null &&
+                                    chest.getChestLocation().getChunk().isLoaded()) {
                                 if (chest.getCooldown() > 0) {
                                     chest.decrementCooldown();
                                 }
@@ -46,7 +48,9 @@ public class SellChestManager {
                         }
                     } else {
                         for (SellChest chest : sellChests) {
-                            if (chest != null && chest.getChestLocation() != null && chest.getChestLocation().getChunk().isLoaded()) {
+                            if (chest != null && chest.getChestLocation() != null &&
+                                    chest.getChestLocation().getChunk() != null &&
+                                    chest.getChestLocation().getChunk().isLoaded()) {
                                 chest.decrementCooldown();
                                 if (chest.getCooldown() < 0) {
                                     chest.executeSale();
