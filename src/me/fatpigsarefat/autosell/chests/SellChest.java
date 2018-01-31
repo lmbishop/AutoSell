@@ -155,9 +155,8 @@ public class SellChest {
             return;
         }
 
-        updateSign(SellSignFormat.getSelling());
-        OfflinePlayer op = Bukkit.getOfflinePlayer(getOwner());
         if (getChestLocation().getBlock().getType() == Material.CHEST || getChestLocation().getBlock().getType() == Material.TRAPPED_CHEST) {
+            updateSign(SellSignFormat.getSelling());
             Chest chest = (Chest) getChestLocation().getBlock().getState();
             double totalSale = 0.0;
             int slot = 0;
