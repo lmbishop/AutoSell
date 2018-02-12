@@ -43,8 +43,9 @@ public class SellChestManager {
                                     chest.getChestLocation().getChunk().isLoaded()) {
                                 if (chest.getCooldown() > 0) {
                                     chest.decrementCooldown();
+                                } else {
+                                    chest.updateSign();
                                 }
-                                chest.updateSign();
                             }
                         }
                     } else {
@@ -57,13 +58,14 @@ public class SellChestManager {
                                 if (chest.getCooldown() < 0) {
                                     chest.executeSale();
                                     chest.setCooldown(Config.sellTimer);
+                                } else {
+                                    chest.updateSign();
                                 }
-                                chest.updateSign();
                             }
                         }
                     }
                 }
-            }.runTaskTimerAsynchronously(AutoSell.getInstance(), 20L, 20L);
+            }.runTaskTimer(AutoSell.getInstance(), 20L, 20L);
         }
     }
 

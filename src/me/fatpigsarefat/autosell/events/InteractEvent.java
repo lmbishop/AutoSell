@@ -18,17 +18,12 @@ public class InteractEvent implements Listener {
             for (SellChest sc : AutoSell.getSellChestManager().getSellChests()) {
                 if (sc.getSignLocation().equals(ev.getClickedBlock().getLocation())) {
                     if (sc.getOwner().equals(ev.getPlayer().getUniqueId()) || sc.getMembers().contains(ev.getPlayer().getUniqueId())) {
-                        new BukkitRunnable() {
-                            @Override
-                            public void run() {
                                 ev.setCancelled(true);
                                 if (sc.getCooldown() <= 0) {
                                     sc.setCooldown(Config.sellTimer);
                                     sc.executeSale();
                                     sc.updateSign();
                                 }
-                            }
-                        }.runTaskAsynchronously(AutoSell.getInstance());
                     } else {
                         ev.getPlayer().sendMessage(ChatColor.RED + "You are not a member of this chest.");
                     }

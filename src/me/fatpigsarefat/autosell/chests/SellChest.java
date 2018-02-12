@@ -11,6 +11,7 @@ import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.NumberFormat;
 import java.util.*;
@@ -151,97 +152,104 @@ public class SellChest {
     }
 
     public void executeSale() {
-        if (!getChestLocation().getChunk().isLoaded()) {
-            return;
-        }
-
-        if (getChestLocation().getBlock().getType() == Material.CHEST || getChestLocation().getBlock().getType() == Material.TRAPPED_CHEST) {
-            updateSign(SellSignFormat.getSelling());
-            Chest chest = (Chest) getChestLocation().getBlock().getState();
-            double totalSale = 0.0;
-            int slot = 0;
-            NumberFormat numf = NumberFormat.getInstance();
-            numf.setGroupingUsed(true);
-            HashMap<Material, Integer> itemAmounts = new HashMap<>();
-            HashMap<Material, Double> itemPrices = new HashMap<>();
-            ArrayList<Integer> slots = new ArrayList<>();
-            for (ItemStack ischest : chest.getInventory()) {
-                if (ischest == null || ischest.getType().equals(Material.AIR) || ischest.getType() == null) {
-                    slot++;
-                    continue;
-                }
-                String type = ischest.getType().toString().toLowerCase();
-                type = type.replace("_", "");
-                String dataCode = String.valueOf(ischest.getData().getData());
-                String key;
-                if (AutoSell.getPrices().containsKey(type)) {
-                    key = type;
-                } else if (AutoSell.getPrices().containsKey(type + ":" + dataCode)) {
-                    key = type + ":" + dataCode;
-                } else {
-                    slot++;
-                    continue;
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                if (!getChestLocation().getChunk().isLoaded()) {
+                    return;
                 }
 
-                slots.add(slot);
-                totalSale += (AutoSell.getPrices().get(key) * ischest.getAmount() * Config.priceMultiplier);
-                if (itemPrices.containsKey(ischest.getType())) {
-                    itemPrices.put(ischest.getType(),
-                            itemPrices.get(ischest.getType()) + (AutoSell.getPrices().get(key)
-                                    * ischest.getAmount() * Config.priceMultiplier));
-                } else {
-                    itemPrices.put(ischest.getType(), (AutoSell.getPrices().get(key) * ischest.getAmount()
-                            * Config.priceMultiplier));
-                }
-                if (itemAmounts.containsKey(ischest.getType())) {
-                    itemAmounts.put(ischest.getType(),
-                            itemAmounts.get(ischest.getType()) + ischest.getAmount());
-                } else {
-                    itemAmounts.put(ischest.getType(), ischest.getAmount());
-                }
-                slot++;
-            }
-            AutoSellChestSellEvent autoSellChestSellEvent = new AutoSellChestSellEvent(this, totalSale);
-            Bukkit.getPluginManager().callEvent(autoSellChestSellEvent);
-            if (!autoSellChestSellEvent.isCancelled()) {
-                for (int s : slots) {
-                    chest.getInventory().setItem(s, new ItemStack(Material.AIR));
-                }
-                List<UUID> uuids = new ArrayList<>();
-                uuids.add(getOwner());
-                uuids.addAll(getMembers());
-                double splitAmounts = autoSellChestSellEvent.getSellAmount() / uuids.size();
-                for (UUID uuid : uuids) {
-                    double boostedAmount = splitAmounts;
-                    OfflinePlayer sellPlayer = Bukkit.getOfflinePlayer(uuid);
-                    double multiplyAmount = 1;
-                    if (sellPlayer.isOnline()) {
-                        multiplyAmount = multiplyAmount + (AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId())).getBooster() /
-                                100D);
+                if (getChestLocation().getBlock().getType() == Material.CHEST || getChestLocation().getBlock().getType() == Material.TRAPPED_CHEST) {
+                    updateSign(SellSignFormat.getSelling());
+                    Chest chest = (Chest) getChestLocation().getBlock().getState();
+                    double totalSale = 0.0;
+                    int slot = 0;
+                    NumberFormat numf = NumberFormat.getInstance();
+                    numf.setGroupingUsed(true);
+                    HashMap<Material, Integer> itemAmounts = new HashMap<>();
+                    HashMap<Material, Double> itemPrices = new HashMap<>();
+                    ArrayList<Integer> slots = new ArrayList<>();
+                    for (ItemStack ischest : chest.getInventory()) {
+                        if (ischest == null || ischest.getType().equals(Material.AIR) || ischest.getType() == null) {
+                            slot++;
+                            continue;
+                        }
+                        String type = ischest.getType().toString().toLowerCase();
+                        type = type.replace("_", "");
+                        String dataCode = String.valueOf(ischest.getData().getData());
+                        String key;
+                        if (AutoSell.getPrices().containsKey(type)) {
+                            key = type;
+                        } else if (AutoSell.getPrices().containsKey(type + ":" + dataCode)) {
+                            key = type + ":" + dataCode;
+                        } else {
+                            slot++;
+                            continue;
+                        }
+
+                        slots.add(slot);
+                        totalSale += (AutoSell.getPrices().get(key) * ischest.getAmount() * Config.priceMultiplier);
+                        if (itemPrices.containsKey(ischest.getType())) {
+                            itemPrices.put(ischest.getType(),
+                                    itemPrices.get(ischest.getType()) + (AutoSell.getPrices().get(key)
+                                            * ischest.getAmount() * Config.priceMultiplier));
+                        } else {
+                            itemPrices.put(ischest.getType(), (AutoSell.getPrices().get(key) * ischest.getAmount()
+                                    * Config.priceMultiplier));
+                        }
+                        if (itemAmounts.containsKey(ischest.getType())) {
+                            itemAmounts.put(ischest.getType(),
+                                    itemAmounts.get(ischest.getType()) + ischest.getAmount());
+                        } else {
+                            itemAmounts.put(ischest.getType(), ischest.getAmount());
+                        }
+                        slot++;
                     }
-                    boostedAmount = boostedAmount * multiplyAmount;
-                    EconomyResponse er = AutoSell.getEconomy().depositPlayer(sellPlayer, boostedAmount);
-                    if (er.transactionSuccess()) {
-                        if (sellPlayer.isOnline()) {
-                            NotificationType notificationType;
-                            if (getOwner().equals(uuid)) {
-                                notificationType = NotificationType.OWNED_CHEST;
-                            } else {
-                                notificationType = NotificationType.SHARED_CHEST;
+                    AutoSellChestSellEvent autoSellChestSellEvent = new AutoSellChestSellEvent(SellChest.this, totalSale);
+                    Bukkit.getPluginManager().callEvent(autoSellChestSellEvent);
+                    if (!autoSellChestSellEvent.isCancelled()) {
+                        for (int s : slots) {
+                            chest.getInventory().setItem(s, new ItemStack(Material.AIR));
+                        }
+                        List<UUID> uuids = new ArrayList<>();
+                        uuids.add(getOwner());
+                        uuids.addAll(getMembers());
+                        double splitAmounts = autoSellChestSellEvent.getSellAmount() / uuids.size();
+                        for (UUID uuid : uuids) {
+                            double boostedAmount = splitAmounts;
+                            OfflinePlayer sellPlayer = Bukkit.getOfflinePlayer(uuid);
+                            double multiplyAmount = 1;
+                            if (sellPlayer.isOnline()) {
+                                multiplyAmount = multiplyAmount + (AutoSell.getPlayerManager().getPlayer(Bukkit.getPlayer(sellPlayer.getUniqueId())).getBooster() /
+
+
+                                        100D);
                             }
-                            if (Config.sellchestMode.equalsIgnoreCase("AUTOSELL")) {
-                                Notification notification = new Notification(boostedAmount, notificationType);
-                                AutoSell.getNotificationDispatcher().addPendingNotificaion(uuid, notification);
-                            } else if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
-                                Notification notification = new Notification(boostedAmount, notificationType);
-                                AutoSell.getNotificationDispatcher().dispatchNotifications(uuid, notification);
+                            boostedAmount = boostedAmount * multiplyAmount;
+                            EconomyResponse er = AutoSell.getEconomy().depositPlayer(sellPlayer, boostedAmount);
+                            if (er.transactionSuccess()) {
+                                if (sellPlayer.isOnline()) {
+                                    NotificationType notificationType;
+                                    if (getOwner().equals(uuid)) {
+                                        notificationType = NotificationType.OWNED_CHEST;
+                                    } else {
+                                        notificationType = NotificationType.SHARED_CHEST;
+                                    }
+                                    if (Config.sellchestMode.equalsIgnoreCase("AUTOSELL")) {
+                                        Notification notification = new Notification(boostedAmount, notificationType);
+                                        AutoSell.getNotificationDispatcher().addPendingNotificaion(uuid, notification);
+                                    } else if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
+                                        Notification notification = new Notification(boostedAmount, notificationType);
+                                        AutoSell.getNotificationDispatcher().dispatchNotifications(uuid, notification);
+                                    }
+                                }
                             }
                         }
                     }
+                } else {
+                    // System.out.println("[AutoSell] Transaction has failed for Chest Sale");
                 }
             }
-        } else {
-            // System.out.println("[AutoSell] Transaction has failed for Chest Sale");
-        }
+        }.runTaskAsynchronously(AutoSell.getInstance());
     }
 }
