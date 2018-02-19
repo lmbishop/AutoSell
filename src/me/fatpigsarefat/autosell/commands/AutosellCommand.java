@@ -19,6 +19,7 @@ import org.bukkit.inventory.ItemStack;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class AutosellCommand implements CommandExecutor {
@@ -36,6 +37,7 @@ public class AutosellCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.GREEN + "/autosell migratedata");
                     sender.sendMessage(ChatColor.GREEN + "/autosell reload");
                     sender.sendMessage(ChatColor.GREEN + "/autosell itemname");
+                    sender.sendMessage(ChatColor.GREEN + "/autosell loadedconfig");
                 }
             } else if (args[0].equalsIgnoreCase("notify")) {
                 asPlayer.setSubscribedToNotifications(!asPlayer.isSubscribedToNotifications());
@@ -206,6 +208,16 @@ public class AutosellCommand implements CommandExecutor {
                     }
                 } else {
                     sender.sendMessage(ChatColor.RED + "Please hold an item.");
+                }
+            } else if (args[0].equalsIgnoreCase("loadedconfig") && sender.hasPermission("autosell.admin")) {
+                if (AutoSell.getPrices().isEmpty()) {
+                    sender.sendMessage(ChatColor.RED + "No items are registered.");
+                }
+                AutoSell.getPrices().forEach((key, value) -> sender.sendMessage(key + " for $" + value));
+                if (Config.essentialsWorth) {
+                    sender.sendMessage(ChatColor.GREEN + "This server is set to read from the Essentials configuration.");
+                } else {
+                    sender.sendMessage(ChatColor.GREEN + "This server is set to read from the AutoSell configuration.");
                 }
             }
         }
