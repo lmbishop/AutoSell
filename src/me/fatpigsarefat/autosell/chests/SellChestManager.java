@@ -39,6 +39,7 @@ public class SellChestManager {
                         for (SellChest chest : sellChests) {
                             if (chest != null &&
                                     chest.getChestLocation() != null &&
+                                    chest.getChestLocation().getWorld() != null &&
                                     chest.getChestLocation().getChunk() != null &&
                                     chest.getChestLocation().getChunk().isLoaded()) {
                                 if (chest.getCooldown() > 0) {
@@ -52,6 +53,7 @@ public class SellChestManager {
                         for (SellChest chest : sellChests) {
                             if (chest != null &&
                                     chest.getChestLocation() != null &&
+                                    chest.getChestLocation().getWorld() != null &&
                                     chest.getChestLocation().getChunk() != null &&
                                     chest.getChestLocation().getChunk().isLoaded()) {
                                 chest.decrementCooldown();
