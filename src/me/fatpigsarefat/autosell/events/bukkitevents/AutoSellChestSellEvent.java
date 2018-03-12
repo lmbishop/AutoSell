@@ -46,6 +46,10 @@ public final class AutoSellChestSellEvent extends Event implements Cancellable {
         return handlers;
     }
 
+    public static HandlerList getHandlerList(){
+        return handlers;
+    }
+
     @Override
     public boolean isCancelled() {
         return cancelled;
