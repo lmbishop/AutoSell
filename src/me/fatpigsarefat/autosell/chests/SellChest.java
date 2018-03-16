@@ -101,6 +101,10 @@ public class SellChest {
         }
     }
 
+    public boolean isLocationLoaded() {
+        return getChestLocation() != null && getChestLocation().getWorld() != null && getChestLocation().getChunk() != null && getChestLocation().getChunk().isLoaded();
+    }
+
     public String getOwnersName() {
         return Bukkit.getOfflinePlayer(getOwner()).getName();
     }

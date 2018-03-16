@@ -72,6 +72,7 @@ public class SignCreateEvent implements Listener {
                     updateSign(event, SellSignFormat.getAutosellCooldown());
                 }
 
+                //TODO save it too since chests needs to be loaded in to auto save
                 AutoSell.getSellChestManager().registerSellChest(sellChest);
             }
         }

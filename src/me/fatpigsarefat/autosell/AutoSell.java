@@ -19,6 +19,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -57,41 +58,46 @@ public class AutoSell extends JavaPlugin {
         setupEconomy();
         loadConfig();
 
-        File dataDir = new File(this.getDataFolder() + File.separator + "data");
-        if (dataDir.isDirectory()) {
-            File[] dataFiles = dataDir.listFiles();
-            if (dataFiles != null) {
-                for (File file : dataFiles) {
-                    int dot = file.getName().lastIndexOf(".");
-                    if (file.getName().substring(dot + 1).equalsIgnoreCase("yml")) {
-                        YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
-                        UUID owner = UUID.fromString(file.getName().replace(".yml", ""));
-                        if (yaml.contains("chests")) {
-                            for (String s : yaml.getConfigurationSection("chests").getKeys(false)) {
-                                String[] parts = s.split(", ");
-                                Location locChest = new Location(Bukkit.getWorld(parts[0]), Integer.parseInt(parts[1]),
-                                        Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
-                                String sign = yaml.getString("chests." + s + ".sign");
-                                String[] signParts = sign.split(", ");
-                                Location locSign = new Location(Bukkit.getWorld(signParts[0]), Integer.parseInt(signParts[1]),
-                                        Integer.parseInt(signParts[2]), Integer.parseInt(signParts[3]));
-                                int cooldown = yaml.getInt("chests." + s + ".cooldown");
-                                List<String> members = yaml.getStringList("chests." + s + ".members");
-                                List<UUID> membersUUID = new ArrayList<>();
-                                for (String member : members) {
-                                    membersUUID.add(UUID.fromString(member));
-                                }
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                File dataDir = new File(AutoSell.this.getDataFolder() + File.separator + "data");
+                if (dataDir.isDirectory()) {
+                    File[] dataFiles = dataDir.listFiles();
+                    if (dataFiles != null) {
+                        for (File file : dataFiles) {
+                            int dot = file.getName().lastIndexOf(".");
+                            if (file.getName().substring(dot + 1).equalsIgnoreCase("yml")) {
+                                YamlConfiguration yaml = YamlConfiguration.loadConfiguration(file);
+                                UUID owner = UUID.fromString(file.getName().replace(".yml", ""));
+                                if (yaml.contains("chests")) {
+                                    for (String s : yaml.getConfigurationSection("chests").getKeys(false)) {
+                                        String[] parts = s.split(", ");
+                                        Location locChest = new Location(Bukkit.getWorld(parts[0]), Integer.parseInt(parts[1]),
+                                                Integer.parseInt(parts[2]), Integer.parseInt(parts[3]));
+                                        String sign = yaml.getString("chests." + s + ".sign");
+                                        String[] signParts = sign.split(", ");
+                                        Location locSign = new Location(Bukkit.getWorld(signParts[0]), Integer.parseInt(signParts[1]),
+                                                Integer.parseInt(signParts[2]), Integer.parseInt(signParts[3]));
+                                        int cooldown = yaml.getInt("chests." + s + ".cooldown");
+                                        List<String> members = yaml.getStringList("chests." + s + ".members");
+                                        List<UUID> membersUUID = new ArrayList<>();
+                                        for (String member : members) {
+                                            membersUUID.add(UUID.fromString(member));
+                                        }
 
-                                SellChest sellChest = new SellChest(cooldown, locChest, locSign, owner, membersUUID);
-                                sellChestManager.registerSellChest(sellChest);
+                                        SellChest sellChest = new SellChest(cooldown, locChest, locSign, owner, membersUUID);
+                                        sellChestManager.registerSellChest(sellChest);
+                                    }
+                                }
                             }
                         }
                     }
+                } else {
+                    dataDir.mkdir();
                 }
             }
-        } else {
-            dataDir.mkdir();
-        }
+        }.runTaskLater(this, 1L);
 
         Bukkit.getPluginCommand("autosell").setExecutor(new AutosellCommand());
         Bukkit.getPluginManager().registerEvents(new SignCreateEvent(), this);

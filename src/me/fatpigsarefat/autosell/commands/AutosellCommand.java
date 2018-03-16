@@ -34,6 +34,7 @@ public class AutosellCommand implements CommandExecutor {
                 sender.sendMessage(ChatColor.GREEN + "/autosell removemember <id|all> <player>");
                 if (sender.hasPermission("autosell.admin")) {
                     sender.sendMessage(ChatColor.GREEN + "/autosell glist");
+                    sender.sendMessage(ChatColor.GREEN + "/autosell status [id]");
                     sender.sendMessage(ChatColor.GREEN + "/autosell migratedata");
                     sender.sendMessage(ChatColor.GREEN + "/autosell reload");
                     sender.sendMessage(ChatColor.GREEN + "/autosell itemname");
@@ -142,6 +143,29 @@ public class AutosellCommand implements CommandExecutor {
                         }
                     }
                 }
+            } else if (args[0].equalsIgnoreCase("status")) {
+                if (args.length >= 2) {
+                    if (StringUtils.isNumeric(args[1])) {
+                        int n = Integer.parseInt(args[1]);
+                        SellChest sellChest = null;
+                        if (n <= AutoSell.getSellChestManager().getSellChests().size()) {
+                            sellChest = AutoSell.getSellChestManager().getSellChests().get(n - 1);
+                        }
+                        if (!(sellChest == null)) {
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Chest Location: " + ChatColor.GREEN.toString() + sellChest.getChestLocation().getBlockX() + ", " + sellChest.getChestLocation()
+                                    .getBlockY() + ", " + sellChest.getChestLocation().getBlockZ());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Sign Location: " + ChatColor.GREEN.toString() + sellChest.getSignLocation().getBlockX() + ", " + sellChest.getSignLocation()
+                                    .getBlockY() + ", " + sellChest.getSignLocation().getBlockZ());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Location is loaded: " + ChatColor.GREEN.toString() + sellChest.isLocationLoaded());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Cooldown: " + ChatColor.GREEN.toString() + sellChest.getCooldown());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Owner: " + ChatColor.GREEN.toString() + sellChest.getOwnersName());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Owner (UUID): " + ChatColor.GREEN.toString() + sellChest.getOwner());
+                            sender.sendMessage(ChatColor.DARK_GREEN.toString() + "Members: " + ChatColor.GREEN.toString() + sellChest.getMembers());
+                        } else {
+                            sender.sendMessage(ChatColor.GREEN + "Chest does not exist (null).");
+                        }
+                    }
+                }
             } else if (args[0].equalsIgnoreCase("list")) {
                 List<SellChest> sellChests = new ArrayList<>();
                 sellChests.addAll(asPlayer.getOwnedSellChests());
@@ -155,11 +179,9 @@ public class AutosellCommand implements CommandExecutor {
                                 .getBlockY() + ", " + sellChest.getChestLocation().getBlockZ());
                         sender.sendMessage(ChatColor.DARK_GREEN + "Relationship: " + ChatColor.GREEN + (owned ? "Owner" : "Member"));
                         StringBuilder sb = new StringBuilder();
-                        sb.append("*" + Bukkit.getOfflinePlayer(sellChest.getOwner()).getName());
-                        sb.append(" ");
+                        sb.append("*").append(Bukkit.getOfflinePlayer(sellChest.getOwner()).getName()).append(" ");
                         for (UUID uuid : sellChest.getMembers()) {
-                            sb.append(Bukkit.getOfflinePlayer(uuid).getName());
-                            sb.append(" ");
+                            sb.append(Bukkit.getOfflinePlayer(uuid).getName()).append(" ");
                         }
                         sender.sendMessage(ChatColor.DARK_GREEN + "Members: " + ChatColor.GREEN + sb.toString());
                         if (owned) {
@@ -176,11 +198,9 @@ public class AutosellCommand implements CommandExecutor {
                     sender.sendMessage(ChatColor.DARK_GREEN.toString() + ChatColor.BOLD + "Chest @ " + ChatColor.GREEN.toString() + ChatColor.BOLD + sellChest.getChestLocation().getBlockX() + ", " + sellChest.getChestLocation()
                             .getBlockY() + ", " + sellChest.getChestLocation().getBlockZ());
                     StringBuilder sb = new StringBuilder();
-                    sb.append("*" + Bukkit.getOfflinePlayer(sellChest.getOwner()).getName());
-                    sb.append(" ");
+                    sb.append("*").append(Bukkit.getOfflinePlayer(sellChest.getOwner()).getName()).append(" ");
                     for (UUID uuid : sellChest.getMembers()) {
-                        sb.append(Bukkit.getOfflinePlayer(uuid).getName());
-                        sb.append(" ");
+                        sb.append(Bukkit.getOfflinePlayer(uuid).getName()).append(" ");
                     }
                     sender.sendMessage(ChatColor.DARK_GREEN + "Members: " + ChatColor.GREEN + sb.toString());
                     sender.sendMessage(" ");

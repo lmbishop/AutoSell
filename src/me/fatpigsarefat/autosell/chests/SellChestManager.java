@@ -38,10 +38,7 @@ public class SellChestManager {
                     if (Config.sellchestMode.equalsIgnoreCase("RIGHTCLICKSELL")) {
                         for (SellChest chest : sellChests) {
                             if (chest != null &&
-                                    chest.getChestLocation() != null &&
-                                    chest.getChestLocation().getWorld() != null &&
-                                    chest.getChestLocation().getChunk() != null &&
-                                    chest.getChestLocation().getChunk().isLoaded()) {
+                                    chest.isLocationLoaded()) {
                                 if (chest.getCooldown() > 0) {
                                     chest.decrementCooldown();
                                 } else {
@@ -52,10 +49,7 @@ public class SellChestManager {
                     } else {
                         for (SellChest chest : sellChests) {
                             if (chest != null &&
-                                    chest.getChestLocation() != null &&
-                                    chest.getChestLocation().getWorld() != null &&
-                                    chest.getChestLocation().getChunk() != null &&
-                                    chest.getChestLocation().getChunk().isLoaded()) {
+                                    chest.isLocationLoaded()) {
                                 chest.decrementCooldown();
                                 if (chest.getCooldown() < 0) {
                                     chest.executeSale();
@@ -109,6 +103,10 @@ public class SellChestManager {
         }
         for (SellChest sellChest : sellChests) {
             YamlConfiguration configuration = loadedConfigs.get(sellChest.getOwner());
+
+            if (!sellChest.isLocationLoaded()) {
+                return; // sad land of errors :(
+            }
 
             Location locChest = sellChest.getChestLocation();
             String locChestS = locChest.getWorld().getName() + ", " + locChest.getBlockX() + ", " + locChest.getBlockY() + ", "+ locChest.getBlockZ();
