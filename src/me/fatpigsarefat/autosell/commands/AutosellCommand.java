@@ -206,7 +206,7 @@ public class AutosellCommand implements CommandExecutor {
                     sender.sendMessage(" ");
                 }
             } else if (args[0].equalsIgnoreCase("reload") && sender.hasPermission("autosell.admin")) {
-                AutoSell.getInstance().loadConfig();
+                AutoSell.getInstance().reloadConfig();
                 sender.sendMessage(ChatColor.GREEN + "Your configuration has been reloaded.");
             } else if (args[0].equalsIgnoreCase("itemname") && sender.hasPermission("autosell.admin")) {
                 if (asPlayer.getPlayer().getItemInHand() != null) {
